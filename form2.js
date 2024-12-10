@@ -685,6 +685,7 @@ let currentStatus = () =>{
             return "at home";
         }
     };
+    console.log(currentStatus);
     // Determine transit infra risk
     const xinfra_transit = currentStatus === "at work" ? workrisk :
         currentStatus === "at home" ? homerisk :
