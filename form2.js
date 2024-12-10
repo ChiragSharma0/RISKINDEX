@@ -673,7 +673,7 @@ document.getElementById('healthAssessmentForm').addEventListener('submit', funct
 
 
 
-    let currentStatus = function timed() {
+let currentStatus = () =>{
         let now = new Date();
         let hour = now.getHours();
 
@@ -684,7 +684,7 @@ document.getElementById('healthAssessmentForm').addEventListener('submit', funct
         } else {
             return "at home";
         }
-    }();
+    };
     // Determine transit infra risk
     const xinfra_transit = currentStatus === "at work" ? workrisk :
         currentStatus === "at home" ? homerisk :
