@@ -2,12 +2,16 @@ age = parseInt(localStorage.getItem('age')) || 0; // Default to 0 if no age is s
 
 
 
-function calculateInfra(xcond, xfac) {
+function calculateInfra(xcond, xfac, home) {
     const residence = document.getElementById('residence').value;
 
-    if (residence === 'homeless') {
-        return 1.00; // Homeless (High)
-    }
+    xcond = parseFloat(xcond);
+    xfac = parseFloat(xfac);
+    if (home == 1) {
+        if (residence === 'homeless') {
+            return 1.00; // Homeless (High)
+        }
+    };
     return (0.508 * xcond) + (0.492 * xfac);
 }
 
@@ -668,25 +672,20 @@ document.getElementById('healthAssessmentForm').addEventListener('submit', funct
     const hospitalAccessrisk = calculateHospitalAccessibilityCategory();
 
     // Infra risk calculation
-    const homerisk = calculateInfra(residenceCategory, homeFacilityCategory);
-    const workrisk = calculateInfra(workplaceCategory, workplaceFacilityCategory);
+    const homerisk = calculateInfra(residenceCategory, homeFacilityCategory, 1);
+    const workrisk = calculateInfra(workplaceCategory, workplaceFacilityCategory, 0);
 
 
 
-// Function to determine current status based on time
+    // Function to determine current status based on time
     const getCurrentStatus = () => {
         const hour = new Date().getHours();
 
         if (hour >= 9 && hour < 17) {
-            console.log("AT work");
             return "at work";
         } else if ((hour >= 8 && hour < 9) || (hour >= 17 && hour < 18)) {
-                        console.log("AT home");
-
             return "traveling";
         } else {
-                        console.log("AT travel");
-
             return "at home";
         }
     };
@@ -697,6 +696,7 @@ document.getElementById('healthAssessmentForm').addEventListener('submit', funct
         currentStatus === "at work" ? workrisk :
             currentStatus === "at home" ? homerisk :
                 transitrisk;
+
 
     // Lifestyle risk
     const liferisk = calculateLifestyle(alcoholrisk, tobaccorisk, caffeinerisk, sleeprisk);
