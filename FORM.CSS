@@ -1,0 +1,116 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.formpage {
+    position: relative;
+    box-sizing: border-box;
+    overflow: auto;
+
+    height: 100%;
+    width: 100%;
+
+    padding: 20px;
+    padding-bottom: 50px;
+
+    background-color: rgb(250, 250, 250);
+
+}
+
+.formprogressbox {
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+
+    height: 150px;
+    width: 95%;
+
+    padding: 20px;
+    margin: 10px auto;
+
+    background-color: white;
+    box-shadow: -3px 3px 8px -2px rgba(0, 0, 0, 0.5);
+    color: rgb(1, 4, 14);
+
+    border-radius: 15px;
+}
+.progreselements{
+    box-sizing: border-box;
+    overflow-x: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 80px;
+    width: 100%;
+
+    padding:  10px 20px;
+
+    background-color: aliceblue;
+}
+
+.formstep{
+    display: flex;
+    font-size: 20px;
+    color: rgb(9, 0, 22);
+    font-weight: 700;
+}
+.formstepcount{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 40px;
+    width: 40px;
+
+    border-radius: 50%;
+    background-color: red;
+
+}
+.formstepname{
+    display: block;
+    width: 300px;                     
+}
+
+
+.formspace{
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+
+    width: 95%;
+    height: auto;
+
+    padding: 20px;
+    margin: 10px auto;
+
+    background-color: white;
+    box-shadow: -3px 3px 8px -2px rgba(0, 0, 0, 0.5);
+    color: rgb(1, 4, 14);
+
+    border-radius: 15px;
+}
+
+
+
+fieldset {
+    border: 2px solid #007BFF;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+legend {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #007BFF;
+}
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+}
