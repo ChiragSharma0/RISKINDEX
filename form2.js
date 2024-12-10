@@ -673,23 +673,30 @@ document.getElementById('healthAssessmentForm').addEventListener('submit', funct
 
 
 
-let currentStatus = () =>{
-        let now = new Date();
-        let hour = now.getHours();
+// Function to determine current status based on time
+    const getCurrentStatus = () => {
+        const hour = new Date().getHours();
 
         if (hour >= 9 && hour < 17) {
+            console.log("AT work");
             return "at work";
         } else if ((hour >= 8 && hour < 9) || (hour >= 17 && hour < 18)) {
+                        console.log("AT home");
+
             return "traveling";
         } else {
+                        console.log("AT travel");
+
             return "at home";
         }
     };
-    console.log(currentStatus);
+
     // Determine transit infra risk
-    const xinfra_transit = currentStatus === "at work" ? workrisk :
-        currentStatus === "at home" ? homerisk :
-            transitrisk;
+    const currentStatus = getCurrentStatus();
+    const xinfra_transit =
+        currentStatus === "at work" ? workrisk :
+            currentStatus === "at home" ? homerisk :
+                transitrisk;
 
     // Lifestyle risk
     const liferisk = calculateLifestyle(alcoholrisk, tobaccorisk, caffeinerisk, sleeprisk);
