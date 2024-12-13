@@ -5,15 +5,33 @@ function handleAgeInput(agevalue) {
     localStorage.setItem('age', agevalue); // Store age in localStorage
 /*     toggleEducationFields();
  */}
+function handleGenderInput(gendervalue) {
+    localStorage.setItem('gender', gendervalue); // Store age in localStorage
+/*     toggleEducationFields();
+ */}
+function handleWeightInput(weightvalue) {
+    localStorage.setItem('weight', weightvalue); // Store age in localStorage
+/*     toggleEducationFields();
+ */}
+function handleHeightInput(heightvalue) {
+    localStorage.setItem('height', heightvalue.toFixed(2)); // Store age in localStorage
+}
+
+
+
+
+
+
+
+
 
 function setDateLimits() {
     const dobInput = document.getElementById('dob');
-    const today = new Date();
 
     // Set the earliest date (1900-01-01)
     const minDate = new Date(1900, 0, 1); // January 1, 1900
-    // Set the latest date (today)
-    const maxDate = today;
+    // Set the latest date (June 10, 2024)
+    const maxDate = new Date(2024, 5, 10); // Months are 0-indexed
 
     // Assign the limits in 'YYYY-MM-DD' format
     dobInput.min = minDate.toISOString().split('T')[0];
@@ -23,33 +41,45 @@ function setDateLimits() {
 // Call setDateLimits on page load
 document.addEventListener('DOMContentLoaded', setDateLimits);
 
-// Function to calculate age based on DOB
-function calculateAge(dob) {
+function calculateAgeInDetail(dob) {
     const dobDate = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - dobDate.getFullYear();
-    const monthDifference = today.getMonth() - dobDate.getMonth();
-    const dayDifference = today.getDate() - dobDate.getDate();
+    const today = new Date(2024, 5, 10); // Fixed to June 10, 2024
 
-    // Adjust age if the birthday hasn't occurred yet this year
-    if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
-        age--;
+    let years = today.getFullYear() - dobDate.getFullYear();
+    let months = today.getMonth() - dobDate.getMonth();
+    let days = today.getDate() - dobDate.getDate();
+
+    // Adjust if necessary
+    if (days < 0) {
+        months--;
+        const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0); // Last day of the previous month
+        days += lastMonth.getDate();
     }
 
-    return age;
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    return { years, months, days };
 }
 
-// Function to calculate the age category based on the calculated age
+// Function to calculate age category based on age
 function calculateAgeCategory() {
     const dobInput = document.getElementById('dob').value;
-    console.log(dobInput);
+    console.log('Date of Birth:', dobInput);
+
     if (!dobInput) {
         alert('Please select a valid Date of Birth.');
         return 1.0; // Default fallback value
     }
 
-    const age = calculateAge(dobInput);
+    const ageDetail = calculateAgeInDetail(dobInput);
+    const age = ageDetail.years;
+    console.log('Calculated Age:', age);
     handleAgeInput(age);
+
+    // Determine age category
     if (age >= 24 && age <= 40) {
         console.log('calculateAgeCategory:', 0.33);
         return 0.33;
@@ -62,11 +92,28 @@ function calculateAgeCategory() {
     }
 }
 
-// Function to update the displayed age category
-function updateAge(ageValue) {
-    const ageField = document.getElementById('displayage');
-    ageField.innerText = ageValue;
+// Function to display both age category and detailed age
+function updateAgeCategory() {
+    const dobInput = document.getElementById('dob').value;
+    if (!dobInput) {
+        alert('Please select a valid Date of Birth.');
+        return;
+    }
+
+    // Calculate age details
+    const ageDetail = calculateAgeInDetail(dobInput);
+    const ageCategory = calculateAgeCategory();
+
+    // Update display
+    const ageDisplay = document.getElementById('displayAgeCategory');
+    ageDisplay.innerText = ageCategory !== null ? `Category: ${ageCategory}` : 'Invalid input';
+
+    const ageDetailDisplay = document.getElementById('displayAgeDetail');
+    ageDetailDisplay.innerText =
+        `Age: ${ageDetail.years} years, ${ageDetail.months} months, and ${ageDetail.days} days`;
 }
+
+
 
 
 
@@ -100,53 +147,84 @@ function convertHeightToMeters(height, unit) {
         return height / 100; // Convert centimeters to meters
     } else if (unit === 'ft') {
         return height * 0.3048; // Convert feet to meters
+    } else if (unit === 'inches') {
+        return height * 0.0254; // Convert inches to meters
     }
     return height; // Already in meters
 }
 
 // Calculate BMI
 function calculateBMI() {
+    console.log("Starting calculateBMI...");
+
     const weight = parseFloat(document.getElementById('weight').value);
     const weightUnit = document.getElementById('weight-unit').value;
     const height = parseFloat(document.getElementById('height').value);
     const heightUnit = document.getElementById('height-unit').value;
 
+    console.log(`Weight entered: ${weight} ${weightUnit}`);
+    console.log(`Height entered: ${height} ${heightUnit}`);
+
     if (!weight || !height) {
+        console.error("Invalid weight or height input.");
         alert('Please enter valid weight and height.');
-        return 0;
+        return null; // Return null for invalid inputs
     }
 
     // Convert inputs to standard units
     const weightInKg = convertWeightToKg(weight, weightUnit);
+    console.log(`Converted Weight in Kg: ${weightInKg}`);
+    handleWeightInput(weightInKg);
+
     const heightInMeters = convertHeightToMeters(height, heightUnit);
+    console.log(`Converted Height in Meters: ${heightInMeters}`);
+    handleHeightInput(heightInMeters);
 
     // BMI formula
-    return weightInKg / (heightInMeters ** 2);
+    const bmi = weightInKg / (heightInMeters ** 2);
+    const bmiRounded = parseFloat(bmi.toFixed(1)); // Round to 1 decimal place
+    console.log(`Calculated BMI (Rounded): ${bmiRounded}`);
+    return bmiRounded;
 }
 
 // Categorize BMI
 function calculateBMICategory() {
-    const bmi = calculateBMI();
-    if (bmi === null) return 0;
+    console.log("Starting calculateBMICategory...");
 
-    // Evaluate BMI categories
-    if (bmi >= 18.5 && bmi <= 24.9) {
-        console.log("calculateBMICategory:", 0.33);
-        return 0.33;
-    } else if ((bmi > 17.0 && bmi < 18.5) || (bmi > 25.0 && bmi < 30)) {
-        console.log("calculateBMICategory:", 0.66);
-        return 0.66;
-    } else {
-        console.log("calculateBMICategory:", 1.00);
-        return 1.00;
+    const bmi = calculateBMI();
+
+    if (bmi === null) {
+        console.warn("BMI calculation returned null. Exiting.");
+        return null;
     }
+
+    console.log(`BMI to categorize: ${bmi}`);
+
+    // Categorize BMI based on the ranges
+    if (bmi >= 18.5 && bmi < 25) {
+        console.log("BMI falls in the Normal weight range: Returning 0.33");
+        return 0.33; // Normal weight
+    } else if ((bmi >= 17.0 && bmi < 18.5) || (bmi >= 25.0 && bmi <= 30.0)) {
+        console.log("BMI falls in the Slightly underweight/overweight range: Returning 0.66");
+        return 0.66; // Slightly underweight or overweight
+    } else if (bmi < 17.0 || bmi > 30.0) {
+        console.log("BMI falls in the Severely underweight/obese range: Returning 1.00");
+        return 1.00; // Severely underweight or obese
+    }
+
+    console.warn("BMI does not fall in any defined range. Returning 0.");
+    return 0; // Return a fallback value if no range matches
 }
 
 // Update BMI display
-function updateBmi(bmiValue) {
+function updateBmi() {
+    let BMI = calculateBMI();
+    let bmiValue = calculateBMICategory();
     const bmiField = document.getElementById('displaybmi');
-    bmiField.innerText = bmiValue !== null ? bmiValue : "Invalid input";
+    bmiField.innerText = bmiValue !== null ? `BMI:${BMI} and Value is:${bmiValue}` : "Invalid input";
+
 }
+
 
 
 
@@ -239,7 +317,7 @@ function calculateEducationCategory() {
 
 
 
-    if (educationLevel === "post_graduate") {
+    if (educationLevel === "post_graduate" || educationLevel === "graduate" || educationLevel === "Above_post_graduate") {
         result = 0.33;
     } else if (educationLevel === "ssc") {
         result = 0.66;
@@ -249,11 +327,11 @@ function calculateEducationCategory() {
             if (enrolled === "yes") {
                 result = 0.33;
             }
-            else{
+            else {
                 result = 1.00;
             }
         }
-        else{
+        else {
             result = 1.00;
         }
     }
@@ -261,20 +339,21 @@ function calculateEducationCategory() {
     console.log("calculateEducationCategory:", result);
     return result;
 }
-function updateedu(eduvalue) {
+function updateedu() {
+    let eduvalue = calculateEducationCategory();
     document.getElementById('displayedu').innerText = eduvalue;
 }
 
 function toggleEducationFields() {
-   const enrollmemt = document.getElementById('enrollmentField');
-   const educationLevel = document.getElementById('educationLevel').value;
+    const enrollmemt = document.getElementById('enrollmentField');
+    const educationLevel = document.getElementById('educationLevel').value;
 
     const age = localStorage.getItem("age");
     if ((age <= 25) && (educationLevel === "below_10th")) {
-    enrollmemt.classList.remove('hidden');
+        enrollmemt.classList.remove('hidden');
 
     }
-    else{
+    else {
         enrollmemt.classList.add('hidden');
 
     }
@@ -306,15 +385,19 @@ function calculateGenderCategory() {
     const gender = document.getElementById('gender').value;
     let pregnant = document.getElementById('pregnantbx');
     let result = 0;
-
+    handleGenderInput(gender);
     pregnant.classList.add('hidden');
     if (gender === "male") {
+        localStorage.setItem("ispregnant", false);
+
         result = 0.66;
     } else if (gender === "female") {
         pregnant.classList.remove('hidden');
         result = 1.00;
     }
-    else if(gender === "intersex"){
+    else if (gender === "intersex") {
+        localStorage.setItem("ispregnant", false);
+
         result = 1.00;
 
     }
@@ -328,17 +411,18 @@ function togglePregnancyField() {
 }
 
 function updategender(genvalue) {
+
     document.getElementById('displaygender').innerText = genvalue;
 }
 
-function setpregnancy(){
-   let pragnent = document.getElementById("pregnant").value;
-   if(pragnent === "yes"){
-    localStorage.setItem("ispregnant",true);
-   }
-   else{
-     localStorage.setItem("ispregnant",false);
-   }
+function setpregnancy() {
+    let pragnent = document.getElementById("pregnant").value;
+    if (pragnent === "yes") {
+        localStorage.setItem("ispregnant", true);
+    }
+    else {
+        localStorage.setItem("ispregnant", false);
+    }
 }
 
 
@@ -368,23 +452,23 @@ function calculateHealthIssuesCategory() {
     const chronic = document.getElementById('chronic_issues').value;
     const hospital = document.getElementById("health_issues").value;
     let result = 0;
-    if(chronic === "yes"){
+    if (chronic === "yes") {
         result = 1.00;
     }
-    else if (chronic === "no"){
-        result =  (hospital === "low") ? 0.33 : (hospital === "medium") ? 0.66 : 1.00;
+    else if (chronic === "no") {
+        result = (hospital === "low") ? 0.33 : (hospital === "medium") ? 0.66 : 1.00;
     }
     console.log("calculateHealthIssuesCategory:", result);
     return result;
 }
 
-function togglechronic(){
+function togglechronic() {
     const chronic = document.getElementById("chronic_issues");
     const hospital = document.getElementById("hospital");
     hospital.classList.add("hidden");
 
-    if(chronic.value === "no"){
-       hospital.classList.remove("hidden");
+    if (chronic.value === "no") {
+        hospital.classList.remove("hidden");
     }
 }
 function updateHI(HIvalue) {
@@ -400,12 +484,31 @@ function updateHI(HIvalue) {
 
 // Medication Category Calculation
 function calculateMedicationCategory() {
+    // Get the value of the selected option from the dropdown
     const medication = document.getElementById('medication').value;
-    const result = (medication === "no_medication") ? 0.33 : 1.00;
-    console.log("calculateMedicationCategory:", result);
+
+    // Check if the medication value is valid (not empty)
+    if (!medication) {
+        console.error("No medication option selected.");
+        return null;  // Return null if no option is selected
+    }
+
+    // Determine the result based on the selected value
+    let result;
+    if (medication === "no_medication") {
+        result = 0.33;  // If no medication, return 0.33
+    } else if (medication === "yes_medication") {
+        result = 1.00;  // If on medication, return 1.00
+    } else {
+        console.warn("Unexpected value selected for medication.");
+        return 0;  // Return 0 if the value is unexpected (safety fallback)
+    }
+
+    console.log("calculateMedicationCategory:", result);  // Log the result for debugging
     return result;
 }
-function updateMed(MEDvalue){
+
+function updateMed(MEDvalue) {
     const medication = document.getElementById('displaymed');
     medication.textContent = MEDvalue;
 
@@ -418,10 +521,16 @@ function updateMed(MEDvalue){
 function calculateHealthIssuesIndex() {
     const healthIssues = calculateHealthIssuesCategory();
     const medication = calculateMedicationCategory();
+    if (medication == 0) {
+        const result = (1 * healthIssues);
+        console.log("calculateHealthIssuesIndex:", result);
+        return result;
+    } else {
+        const result = (0.53 * healthIssues + 0.47 * medication);
+        console.log("calculateHealthIssuesIndex:", result);
+        return result;
+    }
 
-    const result = (0.53 * healthIssues + 0.47 * medication);
-    console.log("calculateHealthIssuesIndex:", result);
-    return result;
 }
 
 
@@ -449,7 +558,7 @@ function toggleDisabilityOptions() {
     const disability = document.getElementById('disability').value;
     document.getElementById('benchmarkField').classList.toggle('hidden', disability !== 'yes');
 }
-function updatedisable(disvalue){
+function updatedisable(disvalue) {
     const medication = document.getElementById('displaydis');
     medication.textContent = disvalue;
 
@@ -483,27 +592,21 @@ function calculateVulnerabilityIndex() {
         (0.142 * xes) +
         (0.092 * xsi) +
         (0.094 * xed) +
-        (0.142 * xg) +
+        (0.097 * xg) +
         (0.198 * xhi) +
         (0.100 * xdi);
+
 
     console.log("calculateVulnerabilityIndex:", vi);
     return vi;
 }
 
-(0.160 * 1) +
-        (0.117 * 1) +
-        (0.142 * 1) +
-        (0.092 * 1) +
-        (0.094 * 1) +
-        (0.142 * 1) +
-        (0.198 * 1) +
-        (0.100 * 1)
 
 // Form submit handler
 document.querySelector('form').addEventListener('submit', function (event) {
     event.preventDefault();
-    const vulnerabilityIndex = calculateVulnerabilityIndex();
+    let vulnerabilityIndex = calculateVulnerabilityIndex();
+    
     // Assuming vulnerabilityIndex is already calculated
     localStorage.setItem('VI', vulnerabilityIndex.toFixed(2));
 
