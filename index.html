@@ -30,10 +30,17 @@
                         <input type="date" id="dob" name="dob" required>
                         <br><br>
                         <div>
-                            <p id="displayage">00</p>
+                            <p id="displayAgeCategory">Category: --</p>
                         </div>
-                        <button type="button" onclick="updateAge(calculateAgeCategory())">Check</button>
-                    </fieldset>
+                    
+                        <!-- Detailed Age Display -->
+                        <div>
+                            <p id="displayAgeDetail">Age: --</p>
+                        </div>
+                    
+                        <!-- Button to Check Age Category -->
+                        <button type="button" onclick="updateAgeCategory()">Check</button>
+                        </fieldset>
 
 
 
@@ -61,6 +68,7 @@
                             <option value="m" selected>meters</option>
                             <option value="cm">centimeters</option>
                             <option value="ft">feet</option>
+                            <option value="inches">inches</option> <!-- Added inches option -->
                         </select>
                         <br><br>
 
@@ -68,8 +76,9 @@
                         <div>
                             <p id="displaybmi">00</p>
                         </div>
-                        <button type="button" onclick="updateBmi(calculateBMICategory())">Check</button>
+                        <button type="button" onclick="updateBmi()">Check</button>
                     </fieldset>
+
 
 
 
@@ -125,20 +134,21 @@
 
                     <!--Section 5:  Education Feilds-->
                     <fieldset>
-
                         <legend>Education</legend>
                         <div id="educationLevelField">
                             <label for="educationLevel">Choose your highest education level:</label>
                             <select id="educationLevel" name="educationLevel" onchange="toggleEducationFields();">
                                 <option value="" disabled selected>Select your education level</option>
+                                <option value="Above_post_graduate">Above Post Graduate</option>
                                 <option value="post_graduate">Post Graduate</option>
-                                <option value="ssc">SSC</option>
-                                <option value="below_10th">10th or below</option>
+                                <option value="graduate">Graduate</option> <!-- Added Graduate option -->
+                                <option value="ssc">12th/SSC</option>
+                                <option value="below_10th">10th or below</option> <!-- Updated option for below 10th -->
                             </select>
                         </div>
                         <div id="enrollmentField" class="hidden">
-                            <label for="enrolled" >Are you currently enrolled in school?</label>
-                            <select id="enrolled" name="enrolled" >
+                            <label for="enrolled">Are you currently enrolled in school?</label>
+                            <select id="enrolled" name="enrolled">
                                 <option value="" disabled selected>Select your answer</option>
                                 <option value="yes">Yes</option>
                                 <option value="no">No</option>
@@ -147,8 +157,9 @@
                         <div>
                             <p id="displayedu">00</p>
                         </div>
-                        <button type="button" onclick="updateedu(calculateEducationCategory())">Check</button>
+                        <button type="button" onclick="updateedu()">Check</button>
                     </fieldset>
+
 
 
 
@@ -205,7 +216,7 @@
                         <div id="hospital" class="hidden">
                             <label>Have you face any acute disease that lead to hospitalization in the following time
                                 brackets?</label>
-                            <select id="health_issues" name="health_issues" >
+                            <select id="health_issues" name="health_issues">
                                 <option value="" disabled selected>Select chronic disease status</option>
                                 <option value="low">No Hospitalization in more than 2 years</option>
                                 <option value="medium">Hospitalization within 1-2 years</option>
@@ -240,6 +251,8 @@
                             <option value="" disabled selected>Select medication status</option>
                             <option value="no_medication">No</option>
                             <option value="yes_medication">Yes</option>
+                            <option value="not_sure">Don't Know</option>
+
                         </select><br><br>
                         <div>
                             <p id="displaymed">00</p>
@@ -254,7 +267,7 @@
 
 
 
-                        <!-- Section 9:Disability -->
+                    <!-- Section 9:Disability -->
 
                     <fieldset>
 
@@ -290,7 +303,7 @@
 
 
 
-                    
+
                     <button type="submit">Submit</button>
                 </form>
             </div>
