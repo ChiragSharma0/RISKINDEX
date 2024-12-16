@@ -75,7 +75,17 @@ function calculateAgeCategory() {
     }
 
     const ageDetail = calculateAgeInDetail(dobInput);
-    const age = ageDetail.years;
+    let age = ageDetail.years;
+    const month = ageDetail.months;
+    const days =ageDetail.days;
+
+    if (month > 0||((month === 0) &&(days > 0))) {
+        age++;
+    }
+    
+
+    
+
     console.log('Calculated Age:', age);
     handleAgeInput(age);
 
@@ -204,10 +214,10 @@ function calculateBMICategory() {
     if (bmi >= 18.5 && bmi < 25) {
         console.log("BMI falls in the Normal weight range: Returning 0.33");
         return 0.33; // Normal weight
-    } else if ((bmi >= 17.0 && bmi < 18.5) || (bmi >= 25.0 && bmi <= 30.0)) {
+    } else if ((bmi >= 17.0 && bmi < 18.5) || (bmi >= 25.0 && bmi < 30.0)) {
         console.log("BMI falls in the Slightly underweight/overweight range: Returning 0.66");
         return 0.66; // Slightly underweight or overweight
-    } else if (bmi < 17.0 || bmi > 30.0) {
+    } else if (bmi < 17.0 || bmi >= 30.0) {
         console.log("BMI falls in the Severely underweight/obese range: Returning 1.00");
         return 1.00; // Severely underweight or obese
     }
