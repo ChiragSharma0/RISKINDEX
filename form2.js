@@ -469,56 +469,92 @@ function updatesleep() {
 
 
 
+function evaluateFluidIntake(userFluidIntakeLiters, activityStatus) {
+    console.log("User input fluid intake (liters):", userFluidIntakeLiters);
 
-
-
-
-
-
-
-
-
-
-
-
-/* function calculateRecommendations() {
-    const fluidIntakeElement = document.getElementById('fluidIntake');
-    const activityStatusElement = document.getElementById('activityStatus');
-
-    if (!fluidIntakeElement || !activityStatusElement) {
-        alert("Required input elements are missing.");
-        return null; // Return null if DOM elements are missing
+    const weight = parseFloat(localStorage.getItem('weight')); // User's weight in kg
+    if (!weight || isNaN(userFluidIntakeLiters)) {
+        alert("Missing or invalid weight or fluid intake.");
+        return null;
     }
 
-    const fluidIntake = parseFloat(fluidIntakeElement.value);
-    const activityStatus = activityStatusElement.value;
+    // Convert fluid intake from liters to milliliters
+    const userFluidIntake = userFluidIntakeLiters * 1000;
+    console.log("User input fluid intake (milliliters):", userFluidIntake);
 
-    if (isNaN(fluidIntake) || !activityStatus) {
-        alert("Please fill in all fields.");
-        return null; // Return null if inputs are invalid
+    // Calculate fluid needs using Holliday-Segar formula
+    const fluidHollidaySegar = calculateFluidIntakeHollidaySegar(weight);
+    console.log("Holliday-Segar fluid requirement (mL):", fluidHollidaySegar);
+
+    // Calculate fluid needs using BMR-based formula
+    const fluidBMR = calculateFluidIntakeBMR(activityStatus);
+    console.log("BMR-based fluid requirement (mL):", fluidBMR);
+
+    // Find the larger of the two fluid requirements
+    const largerFluidRequirement = Math.max(fluidHollidaySegar, fluidBMR);
+    console.log("Larger fluid requirement (mL):", largerFluidRequirement);
+
+    // Thresholds based on body weight
+    const lowCategoryThreshold = largerFluidRequirement;
+    const twoPercentLess = lowCategoryThreshold * 0.98;
+    const fourPercentLess = lowCategoryThreshold * 0.96;
+
+    console.log("Low category threshold (mL):", lowCategoryThreshold);
+    console.log("2% less than low category (mL):", twoPercentLess);
+    console.log("4% less than low category (mL):", fourPercentLess);
+
+    // Determine the category based on user's fluid intake
+    if (userFluidIntake >= lowCategoryThreshold) {
+        return 0.33; // Meets or exceeds larger fluid requirement
+    } else if (userFluidIntake >= twoPercentLess) {
+        return 0.66; // Less than 2% below requirement
+    } else if (userFluidIntake >= fourPercentLess) {
+        return 1.00; // Less than 4% below requirement
+    } else {
+        return 1.00; // Extreme deficiency (fallback to high risk)
     }
-
-    const fluidCategory = calculateFluidCategory(fluidIntake, activityStatus);
-    return fluidCategory; // Return the calculated fluid category
 }
 
-function calculateFluidCategory(fluidIntake, activityStatus) {
-    const bodyWeight = 70; // Assumed average weight in kg; replace with actual input if needed
-    const dailyFluidNeed = calculateFluidIntake(bodyWeight);
-    const activityAdjustedFluidNeed = dailyFluidNeed * getActivityMultiplier(activityStatus);
-
-    // Thresholds based on conditions
-    const highThreshold = activityAdjustedFluidNeed;
-    const mediumThreshold = highThreshold * 0.98;
-    const lowThreshold = highThreshold * 0.96;
-
-    if (fluidIntake >= highThreshold) {
-        return 1.00;
-    } else if (fluidIntake >= mediumThreshold) {
-        return 0.66;
+function calculateFluidIntakeHollidaySegar(weight) {
+    if (weight <= 10) {
+        return 100 * weight; // 100ml/kg for the first 10 kg
+    } else if (weight <= 20) {
+        return 1000 + (50 * (weight - 10)); // 1000ml for first 10kg + 50ml/kg for next 10kg
     } else {
-        return 0.33;
+        return 1000 + 500 + (20 * (weight - 20)); // 1000ml + 500ml + 20ml/kg for remaining weight
     }
+}
+
+function calculateFluidIntakeBMR(activityStatus) {
+    const weight = parseFloat(localStorage.getItem('weight'));
+    const height = parseFloat(localStorage.getItem('height'));
+    const age = parseInt(localStorage.getItem('age'));
+    const gender = localStorage.getItem('gender');
+
+    if (!weight || !height || !age || !gender) {
+        alert("Missing one or more values (weight, height, age, gender) from localStorage.");
+        return null;
+    }
+
+    let BMR;
+    if (gender === 'male') {
+        BMR = 66 + (13.7 * weight) + (5 * height) - (6.8 * age);
+    } else if (gender === 'female') {
+        BMR = 655 + (9.6 * weight) + (1.8 * height) - (4.7 * age);
+    } else {
+        alert("Invalid gender in localStorage.");
+        return null;
+    }
+
+    console.log("Calculated BMR:", BMR);
+
+    const activityMultiplier = getActivityMultiplier(activityStatus);
+    console.log("Activity multiplier:", activityMultiplier);
+
+    const adjustedBMR = BMR * activityMultiplier;
+    console.log("Adjusted BMR (with activity level):", adjustedBMR);
+
+    return (adjustedBMR / 100) * 50; // Fluid intake in mL (50ml/100kcal)
 }
 
 function getActivityMultiplier(activityStatus) {
@@ -534,50 +570,35 @@ function getActivityMultiplier(activityStatus) {
         case 'extra_active':
             return 1.9;
         default:
-            return 1.0; // Default multiplier
+            return 1.0;
     }
 }
 
-function calculateFluidIntake(weight) {
-    if (weight <= 10) {
-        return 100 * weight; // 100ml/kg for the first 10 kg
-    } else if (weight <= 20) {
-        return 1000 + (50 * (weight - 10)); // 1000ml for first 10kg + 50ml/kg for next 10kg
-    } else {
-        return 1000 + 500 + (20 * (weight - 20)); // 1000ml + 500ml + 20ml/kg for remaining weight
-    }
-} */
+function updatefluid() {
 
+    const fluidInputElement = document.getElementById('fluidIntake');
+    const activityStatusElement = document.getElementById('activityStatus');
 
-function submitFluidDropdown() {
-    // Get the selected value from the dropdown
-    const dropdown = document.getElementById("fluidDropdown");
-    const selectedValue = dropdown.value;
-
-    // If no option is selected, alert the user
-    if (!selectedValue) {
-        alert("Please select an option.");
+    if (!fluidInputElement || !activityStatusElement) {
+        alert("Missing input elements for fluid intake or activity status.");
         return;
     }
 
-    const fluidCategory = parseFloat(selectedValue);
+    const userFluidIntake = parseFloat(fluidInputElement.value);
+    const activityStatus = activityStatusElement.value;
 
-    // Display the result
-    const resultElement = document.getElementById("dropdownFluidResult");
-    if (resultElement) {
-        resultElement.textContent = `Your fluid consumption is categorized as ${fluidCategory}.`;
+    if (isNaN(userFluidIntake) || !activityStatus) {
+        alert("Please provide valid fluid intake and select an activity level.");
+        return;
     }
 
-    // Return the fluid category value
-    return fluidCategory;
-}
+    console.log("User entered fluid intake (liters):", userFluidIntake);
+    console.log("User selected activity status:", activityStatus);
 
-
-function updatefluid() {
-    const fluidCategory = submitFluidDropdown();
+    const fluidCategory = evaluateFluidIntake(userFluidIntake, activityStatus);
 
     if (fluidCategory === null) {
-        return; // Exit if input validation failed
+        return; // Exit if evaluation failed
     }
 
     const displayElement = document.getElementById("displayfluid");
@@ -587,7 +608,11 @@ function updatefluid() {
     }
 
     displayElement.innerText = `Fluid Category: ${fluidCategory}`;
+    console.log("Displayed fluid category:", fluidCategory);
 }
+
+
+
 
 
 
