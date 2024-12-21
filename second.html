@@ -284,21 +284,40 @@
 
                 </fieldset>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <!-- section: fluid-->
-                <!-- <fieldset>
+                <fieldset>
                     <legend>Fluids and Exercise</legend>
-
+                
                     <label for="fluidIntake">How many liters of fluid do you consume daily (in L)?</label>
-                    <select id="fluidIntake" required>
-                        <option value="">Select...</option>
-                        <script>
-                            for (let i = 0; i <= 20; i++) {
-                                document.write(`<option value="${i}">${i}</option>`);
-                            }
-                        </script>
-                        <option value="more">More than 20</option>
-                    </select>
-
+                    <input type="number" id="fluidIntake" step="0.1" required>
+                
                     <label for="activityStatus">What is your daily activity level?</label>
                     <select id="activityStatus" required>
                         <option value="">Select...</option>
@@ -312,24 +331,39 @@
                         <p id="displayfluid">Risk: 00</p>
                     </div>
                     <button type="button" onclick="updatefluid()">Check</button>
-
-
-                </fieldset> -->
-               
-                <fieldset>
-                    <legend>Fluid (temporary)</legend>
-                    <label for="fluidDropdown">How many liters of fluid do you consume daily (in L)?</label>
-                    <select id="fluidDropdown">
-                        <option value="">--Select an option--</option>
-                        <option value="0.33">Low (Less than 1.5L)</option>
-                        <option value="0.66">Medium (1.5L to 2.5L)</option>
-                        <option value="1.00">High (More than 2.5L)</option>
-                    </select>
-                    <div>
-                        <p id="displayfluid">Risk: 00</p>
-                    </div>
-                    <button type="button" onclick="updatefluid()">Check</button>
                 </fieldset>
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <!-- Section 6: Air Quality & Health Infrastructure -->
                 <fieldset>
@@ -356,7 +390,7 @@
 
 
 
-<!--hospital-->
+                <!--hospital-->
                 <fieldset>
                     <legend>Accessibility to Health Infrastructure</legend>
                     <label for="hospital_access_home">How long does it take to reach the hospital from the place of
