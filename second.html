@@ -226,23 +226,81 @@
 
 
 
+
+
+
+
+
                 <!--tobacoo-->
-                <fieldset>
+                <fieldset id="TobaccoFeild">
                     <legend>Tobacco Risk Assessment</legend>
-
-                    <!-- Initial Question -->
-                    <label for="tobacco">Did you ever consume tobacco?</label>
-                    <select id="tobacco" name="tobacco" onchange="toggleTobaccoQuestions()">
-                        <option value="" disabled selected>Select</option>
-                        <option value="never">Never</option>
-                        <option value="yes">Yes</option>
-                    </select>
-
-
+                
+                    <!-- Question 1 -->
+                    <div id="q1" class="question-container">
+                        <label for="tobacco">Did you ever consume tobacco?</label>
+                        <select id="tobacco" name="tobacco" onchange="toggleTobaccoQuestions()">
+                            <option value="" disabled selected>Select</option>
+                            <option value="never">Never</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                
+                    <!-- Question 2 -->
+                    <div id="q2" class="question-container hidden">
+                        <label for="tobaccoType">Which type of tobacco?</label>
+                        <select id="tobaccoType" name="tobaccoType" onchange="toggleTobaccoQuestions()">
+                            <option value="" disabled selected>Select</option>
+                            <option value="smoked">Smoked</option>
+                            <option value="smokeless">Smokeless</option>
+                            <option value="both">Both</option>
+                        </select>
+                    </div>
+                
+                    <!-- Question 3 -->
+                    <div id="q3" class="question-container hidden">
+                        <label id="lifetimeConsumptionLabel" for="tobacco_70g">
+                            <!-- This label will dynamically update -->
+                        </label>
+                        <select id="tobacco_70g" name="tobacco_70g" onchange="toggleTobaccoQuestions()">
+                            <option value="" disabled selected>Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                
+                    <!-- Question 4 -->
+                    <div id="q4" class="question-container hidden">
+                        <label for="recent_tobacco">Did you consume tobacco in the last 6 months?</label>
+                        <select id="recent_tobacco" name="recent_tobacco" onchange="toggleTobaccoQuestions()">
+                            <option value="" disabled selected>Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                
+                    <!-- Question 5 -->
+                    <div id="q5" class="question-container hidden">
+                        <label for="smoked_last_5years">Did you smoke tobacco in the last 5 years or use smokeless tobacco in the last 1 year?</label>
+                        <select id="smoked_last_5years" name="smoked_last_5years">
+                            <option value="" disabled selected>Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                
                     <!-- Risk Display -->
                     <button type="button" onclick="updateTobaccoRisk()">Evaluate Risk</button>
                     <p id="tobaccoRisk">Risk Level: </p>
                 </fieldset>
+                
+                
+
+
+
+
+
+
+
 
 
                 <!-- caffine-->
@@ -314,10 +372,10 @@
                 <!-- section: fluid-->
                 <fieldset>
                     <legend>Fluids and Exercise</legend>
-                
+
                     <label for="fluidIntake">How many liters of fluid do you consume daily (in L)?</label>
                     <input type="number" id="fluidIntake" step="0.1" required>
-                
+
                     <label for="activityStatus">What is your daily activity level?</label>
                     <select id="activityStatus" required>
                         <option value="">Select...</option>
@@ -332,7 +390,7 @@
                     </div>
                     <button type="button" onclick="updatefluid()">Check</button>
                 </fieldset>
-                
+
 
 
 
