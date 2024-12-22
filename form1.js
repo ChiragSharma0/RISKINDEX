@@ -79,9 +79,7 @@ function calculateAgeCategory() {
     const month = ageDetail.months;
     const days =ageDetail.days;
 
-    if (month > 0||((month === 0) &&(days > 0))) {
-        age++;
-    }
+    
     
 
     
@@ -90,10 +88,10 @@ function calculateAgeCategory() {
     handleAgeInput(age);
 
     // Determine age category
-    if (age >= 24 && age <= 40) {
+    if (age >= 24 && age <= 39) {
         console.log('calculateAgeCategory:', 0.33);
         return 0.33;
-    } else if ((age >= 5 && age < 24) || (age > 40 && age <= 65)) {
+    } else if ((age >= 5 && age < 24) || (age >= 40 && age <= 65)) {
         console.log('calculateAgeCategory:', 0.66);
         return 0.66;
     } else {
