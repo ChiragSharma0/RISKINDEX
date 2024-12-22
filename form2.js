@@ -41,9 +41,9 @@ function calculateWorkplaceCategory() {
 
     if (workplace === 'indoor' && structure === 'indoor_well') {
         return 0.33; // Indoor, well-constructed (Low)
-    } else if (workplace === 'indoor' && (structure === 'indoor_temp' || structure === 'machinery')) {
+    } else if (workplace === 'indoor' && (structure === 'indoor_temp' )) {
         return 0.66; // Indoor, temporary or machinery (Medium)
-    } else if (workplace === 'outdoor') {
+    } else if (workplace === 'outdoor' || (workplace === 'indoor' &&  structure === 'machinery')) {
         return 1.00; // Outdoor (High)
     }
     return 0; // Invalid selection
@@ -67,7 +67,7 @@ function calculateWorkplaceFacilityCategory() {
 function updateWork(workrisk) {
 
     const displayRisk = document.getElementById('displayWorkRisk');
-    displayRisk.innerText = `Risk: ${workrisk}`;
+    displayRisk.innerText = `Risk: ${workrisk.toFixed(2)}`;
 }
 
 
@@ -300,59 +300,80 @@ function calculateTobaccoRisk() {
 
 // Function to toggle the visibility of additional questions
 function toggleTobaccoQuestions() {
+    // Get user responses
     const tobacco = document.getElementById("tobacco").value;
-    const tobaccoType = document.getElementById("tobacco_type");
-    const lifetimeConsumption = document.getElementById("tobacco_70g");
-    const recentTobacco = document.getElementById("recent_tobacco");
-    const smokedLast5Years = document.getElementById("smoked_last_5years");
-    const smokelessLast1Year = document.getElementById("smokeless_last_1year");
+    const tobaccoType = document.getElementById("tobaccoType").value;
+    const lifetimeConsumption = document.getElementById("tobacco_70g").value;
+    const recentTobacco = document.getElementById("recent_tobacco").value;
 
-    const isPregnant = localStorage.getItem("ispregnant") === "true";
-    const age = parseInt(localStorage.getItem("age"));
+    // Get question containers
+    const q2 = document.getElementById("q2");
+    const q3 = document.getElementById("q3");
+    const q4 = document.getElementById("q4");
+    const q5 = document.getElementById("q5");
 
-    // If age < 25 or pregnant, hide all subsequent questions
-    if (age < 25 || isPregnant) {
-        tobaccoType.parentElement.classList.add("hidden");
-        lifetimeConsumption.parentElement.classList.add("hidden");
-        recentTobacco.parentElement.classList.add("hidden");
-        smokedLast5Years.parentElement.classList.add("hidden");
-        smokelessLast1Year.parentElement.classList.add("hidden");
+    // Get the lifetime consumption label
+    const lifetimeConsumptionLabel = document.getElementById("lifetimeConsumptionLabel");
+
+    // Helper functions
+    const showQuestion = (question) => question.classList.remove("hidden");
+    const hideQuestion = (question) => question.classList.add("hidden");
+
+    // Logic for showing/hiding questions
+    if (tobacco === "yes") {
+        showQuestion(q2); // Show question 2
+    } else {
+        hideQuestion(q2);
+        hideQuestion(q3);
+        hideQuestion(q4);
+        hideQuestion(q5);
         return;
     }
 
-    // Show questions based on the user's responses
-    if (tobacco === "yes") {
-        tobaccoType.parentElement.classList.remove("hidden");
-        lifetimeConsumption.parentElement.classList.remove("hidden");
+    if (tobaccoType === "smoked") {
+        lifetimeConsumptionLabel.innerText = "Is your lifetime tobacco consumption more than 100 cigarettes?";
+        showQuestion(q3); // Show question 3
+        hideQuestion(q4);
+    } else if (tobaccoType === "smokeless") {
+        lifetimeConsumptionLabel.innerText = "Is your lifetime tobacco consumption more than 70g?";
+        showQuestion(q3); // Show question 3
+        hideQuestion(q4);
+    } else if (tobaccoType === "both") {
+        lifetimeConsumptionLabel.innerText = "Is your lifetime tobacco consumption more than 70g? (>100 cigarettes)";
+        showQuestion(q3); // Show question 3
+        hideQuestion(q4);
     } else {
-        tobaccoType.parentElement.classList.add("hidden");
-        lifetimeConsumption.parentElement.classList.add("hidden");
-        recentTobacco.parentElement.classList.add("hidden");
-        smokedLast5Years.parentElement.classList.add("hidden");
-        smokelessLast1Year.parentElement.classList.add("hidden");
+        hideQuestion(q3);
+        hideQuestion(q4);
+        hideQuestion(q5);
     }
 
-    if (lifetimeConsumption && lifetimeConsumption.value === "no") {
-        recentTobacco.parentElement.classList.remove("hidden");
+    if (lifetimeConsumption === "no") {
+        showQuestion(q4); // Show question 4
+        hideQuestion(q5); // Ensure question 5 is hidden until question 4 is answered
+    } else if (lifetimeConsumption === "yes") {
+        hideQuestion(q4);
+        showQuestion(q5); // Show question 5 directly if lifetime consumption is "Yes"
     } else {
-        recentTobacco.parentElement.classList.add("hidden");
+        hideQuestion(q4);
+        hideQuestion(q5);
     }
 
-    if (lifetimeConsumption && lifetimeConsumption.value === "yes") {
-        smokedLast5Years.parentElement.classList.remove("hidden");
-        smokelessLast1Year.parentElement.classList.remove("hidden");
+    if (recentTobacco === "yes") {
+        showQuestion(q5); // Show question 5 if recent tobacco use is confirmed
     } else {
-        smokedLast5Years.parentElement.classList.add("hidden");
-        smokelessLast1Year.parentElement.classList.add("hidden");
+        hideQuestion(q5);
     }
 }
+
+
 
 // Function to update the risk display
 function updateTobaccoRisk() {
     const riskLevel = calculateTobaccoRisk();
     document.getElementById("tobaccoRisk").innerText = `Risk Level: ${riskLevel}`;
 }
-
+ 
 
 
 
@@ -469,6 +490,20 @@ function updatesleep() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function evaluateFluidIntake(userFluidIntakeLiters, activityStatus) {
     console.log("User input fluid intake (liters):", userFluidIntakeLiters);
 
@@ -527,7 +562,7 @@ function calculateFluidIntakeHollidaySegar(weight) {
 
 function calculateFluidIntakeBMR(activityStatus) {
     const weight = parseFloat(localStorage.getItem('weight'));
-    const height = parseFloat(localStorage.getItem('height'));
+    const height = parseFloat(localStorage.getItem('height'))*100;
     const age = parseInt(localStorage.getItem('age'));
     const gender = localStorage.getItem('gender');
 
@@ -539,7 +574,7 @@ function calculateFluidIntakeBMR(activityStatus) {
     let BMR;
     if (gender === 'male') {
         BMR = 66 + (13.7 * weight) + (5 * height) - (6.8 * age);
-    } else if (gender === 'female') {
+    } else if (gender === 'female'||gender === 'intersex') {
         BMR = 655 + (9.6 * weight) + (1.8 * height) - (4.7 * age);
     } else {
         alert("Invalid gender in localStorage.");
@@ -575,7 +610,6 @@ function getActivityMultiplier(activityStatus) {
 }
 
 function updatefluid() {
-
     const fluidInputElement = document.getElementById('fluidIntake');
     const activityStatusElement = document.getElementById('activityStatus');
 
@@ -595,11 +629,31 @@ function updatefluid() {
     console.log("User entered fluid intake (liters):", userFluidIntake);
     console.log("User selected activity status:", activityStatus);
 
+    // Evaluate fluid intake
     const fluidCategory = evaluateFluidIntake(userFluidIntake, activityStatus);
 
     if (fluidCategory === null) {
         return; // Exit if evaluation failed
     }
+
+    // Retrieve additional information for display
+    const weight = parseFloat(localStorage.getItem('weight'));
+    const fluidHollidaySegar = calculateFluidIntakeHollidaySegar(weight);
+    const fluidBMR = calculateFluidIntakeBMR(activityStatus);
+    const userFluidIntakeMl = userFluidIntake * 1000;
+
+    if (fluidHollidaySegar === null || fluidBMR === null) {
+        alert("Unable to calculate fluid requirements due to missing data.");
+        return;
+    }
+
+    // Prepare the message for display
+    const message = `
+        User Fluid Intake: ${userFluidIntakeMl.toFixed(2)} mL
+        Holliday-Segar Requirement: ${fluidHollidaySegar.toFixed(2)} mL
+        BMR-Based Requirement: ${fluidBMR.toFixed(2)} mL
+        Fluid Category: ${fluidCategory}
+    `;
 
     const displayElement = document.getElementById("displayfluid");
     if (!displayElement) {
@@ -607,9 +661,11 @@ function updatefluid() {
         return;
     }
 
-    displayElement.innerText = `Fluid Category: ${fluidCategory}`;
-    console.log("Displayed fluid category:", fluidCategory);
+    // Display the message
+    displayElement.innerText = message.trim();
+    console.log("Displayed fluid category and details:", message.trim());
 }
+
 
 
 
