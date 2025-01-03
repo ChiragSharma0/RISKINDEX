@@ -756,8 +756,6 @@ document.getElementById('healthAssessmentForm').addEventListener('submit', funct
     const homerisk = calculateInfra(residenceCategory, homeFacilityCategory, 1);
     const workrisk = calculateInfra(workplaceCategory, workplaceFacilityCategory, 0);
 
-
-
     // Function to determine current status based on time
     const getCurrentStatus = () => {
         const hour = new Date().getHours();
@@ -775,15 +773,24 @@ document.getElementById('healthAssessmentForm').addEventListener('submit', funct
     const currentStatus = getCurrentStatus();
     const xinfra_transit =
         currentStatus === "at work" ? workrisk :
-            currentStatus === "at home" ? homerisk :
-                transitrisk;
-
+        currentStatus === "at home" ? homerisk :
+        transitrisk;
 
     // Lifestyle risk
     const liferisk = calculateLifestyle(alcoholrisk, tobaccorisk, caffeinerisk, sleeprisk);
 
     // Fluid risk
-    const fluidrisk = /* calculateFluidCategory(fluidIntake, activityStatus)? */submitFluidDropdown();
+    const fluidInputElement = document.getElementById('fluidIntake');
+    const activityStatusElement = document.getElementById('activityStatus');
+
+
+    const userFluidIntake = parseFloat(fluidInputElement.value);
+    const activityStatus = activityStatusElement.value;
+
+
+    const fluidrisk = evaluateFluidIntake(userFluidIntake, activityStatus);
+
+
 
     // Exposure Index
     const ExposureIndex = calculateExposureIndex(xinfra_transit, liferisk, fluidrisk, airQualityrisk, hospitalAccessrisk).toFixed(2);
@@ -792,6 +799,7 @@ document.getElementById('healthAssessmentForm').addEventListener('submit', funct
     localStorage.setItem('EI', ExposureIndex);
     alert("The Exposure Index is: " + ExposureIndex);
 });
+
 
 
 
