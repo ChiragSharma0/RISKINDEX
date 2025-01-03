@@ -149,16 +149,36 @@ function convertWeightToKg(weight, unit) {
     return weight; // Already in kilograms
 }
 
-// Convert height to meters if necessary
-function convertHeightToMeters(height, unit) {
-    if (unit === 'cm') {
-        return height / 100; // Convert centimeters to meters
-    } else if (unit === 'ft') {
-        return height * 0.3048; // Convert feet to meters
-    } else if (unit === 'inches') {
-        return height * 0.0254; // Convert inches to meters
+// Toggle visibility of feet and inches inputs
+function toggleFeetInchesInputs() {
+    const heightUnit = document.getElementById('height-unit').value;
+    const feetInchesContainer = document.getElementById('feet-inches-container');
+    const heightInput = document.getElementById('height');
+
+    if (heightUnit === 'ft') {
+        feetInchesContainer.style.display = 'block';
+        heightInput.style.display = 'none';
+    } else {
+        feetInchesContainer.style.display = 'none';
+        heightInput.style.display = 'block';
     }
-    return height; // Already in meters
+}
+
+// Convert height to meters if necessary
+function convertHeightToMeters() {
+    const heightUnit = document.getElementById('height-unit').value;
+
+    if (heightUnit === 'm') {
+        return parseFloat(document.getElementById('height').value); // Already in meters
+    } else if (heightUnit === 'cm') {
+        return parseFloat(document.getElementById('height').value) / 100; // Convert cm to meters
+    } else if (heightUnit === 'ft') {
+        const feet = parseFloat(document.getElementById('height-feet').value) || 0;
+        const inches = parseFloat(document.getElementById('height-inches').value) || 0;
+        return feet * 0.3048 + inches * 0.0254; // Convert feet and inches to meters
+    }
+
+    return null; // Invalid input
 }
 
 // Calculate BMI
@@ -167,24 +187,45 @@ function calculateBMI() {
 
     const weight = parseFloat(document.getElementById('weight').value);
     const weightUnit = document.getElementById('weight-unit').value;
-    const height = parseFloat(document.getElementById('height').value);
     const heightUnit = document.getElementById('height-unit').value;
 
     console.log(`Weight entered: ${weight} ${weightUnit}`);
-    console.log(`Height entered: ${height} ${heightUnit}`);
+    console.log(`Height unit selected: ${heightUnit}`);
 
-    if (!weight || !height) {
-        console.error("Invalid weight or height input.");
-        alert('Please enter valid weight and height.');
-        return null; // Return null for invalid inputs
+    if (!weight) {
+        console.error("Invalid weight input.");
+        alert('Please enter a valid weight.');
+        return null; // Return null for invalid weight
     }
 
-    // Convert inputs to standard units
+    // Convert weight to kg
     const weightInKg = convertWeightToKg(weight, weightUnit);
     console.log(`Converted Weight in Kg: ${weightInKg}`);
     handleWeightInput(weightInKg);
 
-    const heightInMeters = convertHeightToMeters(height, heightUnit);
+    // Handle height based on the selected unit
+    let heightInMeters = null;
+    if (heightUnit === 'ft') {
+        const feet = parseFloat(document.getElementById('height-feet').value) || 0;
+        const inches = parseFloat(document.getElementById('height-inches').value) || 0;
+
+        if (feet === 0 && inches === 0) {
+            console.error("Invalid height input for feet and inches.");
+            alert('Please enter valid height in feet and inches.');
+            return null; // Return null for invalid height
+        }
+
+        heightInMeters = feet * 0.3048 + inches * 0.0254; // Convert feet and inches to meters
+    } else {
+        const height = parseFloat(document.getElementById('height').value);
+        if (!height) {
+            console.error("Invalid height input.");
+            alert('Please enter a valid height.');
+            return null; // Return null for invalid height
+        }
+        heightInMeters = convertHeightToMeters();
+    }
+
     console.log(`Converted Height in Meters: ${heightInMeters}`);
     handleHeightInput(heightInMeters);
 
@@ -194,6 +235,7 @@ function calculateBMI() {
     console.log(`Calculated BMI (Rounded): ${bmiRounded}`);
     return bmiRounded;
 }
+
 
 // Categorize BMI
 function calculateBMICategory() {
