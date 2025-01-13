@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Assessment Form</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="FORM.CSS">
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+        }
+
+        label,
+        select {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="page">
+        <div class="formpage">
+            <form id="healthAssessmentForm">
+
+
+                <!-- Section 1: Infrastructure (Occupation/Place of Work) -->
+                <fieldset id="workfield">
+                    <legend>Infrastructure (Occupation/Place of Work)</legend>
+                  
+                    <!-- Workplace Location -->
+                    <label for="workplace">Location of Your Workplace:</label>
+                    <select id="workplace" name="workplace" onchange="toggleWorkplaceDetails()">
+                      <option value="" disabled selected>Select your workplace location</option>
+                      <option value="indoor">Indoor</option>
+                      <option value="outdoor">Outdoor</option>
+                    </select>
+                  
+                    <!-- Indoor Workplace Details -->
+                    <div id="indoorDetails" class="hidden">
+                      <label for="heavy_machinery">Does your workplace have any heavy heat-producing machinery?</label>
+                      <select id="heavy_machinery" name="heavy_machinery" onchange="toggleIndoorStructure()">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                  
+                      <!-- Indoor Structure Details -->
+                      <div id="indoorStructureDetails" class="hidden">
+                        <label for="indoor_structure">Is your workplace:</label>
+                        <select id="indoor_structure" name="indoor_structure">
+                          <option value="" disabled selected>Select your workplace structure</option>
+                          <option value="indoor_well">Well-constructed Structure</option>
+                          <option value="indoor_temp">Temporary/Kutcha Structure</option>
+                        </select>
+                      </div>
+                    </div>
+                  
+                    <!-- Workplace Services -->
+                    <label for="services">Are there services available in your workplace?</label>
+                    <select id="services" name="services">
+                      <option value="" disabled selected>Select service availability</option>
+                      <option value="no_service">No Services</option>
+                      <option value="basic_service">Basic Services (Water, Electricity, and Shade)</option>
+                      <option value="extra_facility">Extra Facilities (AC)</option>
+                    </select>
+                  
+                    <!-- Risk Display -->
+                    <div>
+                      <p id="displayWorkRisk">Risk: 00</p>
+                    </div>
+                    <button type="button" onclick="updateWork(calculateInfra(calculateWorkplaceCategory(), calculateWorkplaceFacilityCategory(), 0))">Check</button>
+                  </fieldset>
+
+
+
+
+
+
+
+
+
+
+
+                <!-- Section 2: Infrastructure (Household) -->
+                <fieldset id="homefeild">
+                    <legend>Infrastructure (Household)</legend>
+                    <label for="residence">Location of Your Residence:</label>
+                    <select id="residence" name="residence" onchange="toggleResidenceDetails()">
+                        <option value="" disabled selected>Select your residence location</option>
+                        <option value="home">Home</option>
+                        <option value="homeless">Homeless</option>
+                    </select>
+
+                    <!-- Home Residence Details -->
+                    <div id="homeDetails" class="hidden">
+                        <label for="structure">If home, choose your living category:</label>
+                        <select id="structure" name="structure">
+                            <option value="" disabled selected>Select your living category</option>
+                            <option value="pukka_large">Pukka House (>30 sq.mt. or >7.5 sq.mt./person)</option>
+                            <option value="pukka_small"> Kutcha/Dilapidated or Pukka House (`<30 sq.mt. or <7.5
+                                    sq.mt.\person)`</option>
+                        </select>
+                    </div>
+
+                    <label for="home_services">Are there services available in your residence?</label>
+                    <select id="home_services" name="home_services">
+                        <option value="" disabled selected>Select service availability</option>
+                        <option value="no_service">No Services</option>
+                        <option value="basic_service">Basic Services (Water, Electricity)</option>
+                        <option value="extra_facility">Extra Facilities (AC)</option>
+                    </select>
+
+                    <div>
+                        <p id="displayHomeRisk">Risk: 00</p>
+                    </div>
+                    <button type="button"
+                        onclick="updateHome(calculateInfra(calculateResidenceCategory(),calculateHomeFacilityCategory(), 1))">Check</button>
+
+                </fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- Section 3: Transit -->
+                <fieldset id="travelfeild">
+                    <legend>Transit</legend>
+                    <label for="transport_type">Your mode of transport to workplace:</label>
+                    <select id="transport_type" name="transport_type">
+                        <option value="" disabled selected>Select your transport type</option>
+                        <option value="motorized_ac">Motorized (Air-conditioned)</option>
+                        <option value="motorized_non_ac">Motorized (Non-air-conditioned)</option>
+                        <option value="non_motorized">Non-motorized (non-AC)</option>
+                    </select>
+                    <div>
+                        <p id="displaytrans">Risk: 00</p>
+                    </div>
+                    <button type="button" onclick="updatetrans(calculateTransitCategory())">Check</button>
+
+                </fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- Section 4: Lifestyle -->
+
+                <fieldset id="alcoholField">
+                    <legend>Alcohol Consumption</legend>
+
+                    <!-- Question 1: Have you consumed alcohol in the last 5 years? -->
+                    <label for="alcohol">Have you consumed alcohol in the last 5 years?</label>
+                    <select id="alcohol" name="alcohol" onchange="toggleAlcoholDetails()">
+                        <option value="" disabled selected>Select alcohol consumption status</option>
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+
+                    <!-- Conditional Questions -->
+                    <div id="alcoholDetails" class="hidden">
+
+                        <!-- Question 2: Do you drink more than 24g/day? -->
+                        <label for="daily_consumption">Do you usually drink more than 24g in a day?</label>
+                        <div id="knowcontent">i
+                            <div id="table-container">
+                                <h2>Alcohol Content by Type</h2>
+                                <table>
+                                  <thead>
+                                    <tr>
+                                      <th>Type of Alcohol</th>
+                                      <th>Ethyl Alcohol Content at 20°C (per cent by volume)</th>
+                                      <th>Max Value</th>
+                                      <th>Gram of Alcohol/ml</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>Brandy or Grape Brandy</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Blended Brandy</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Country Liquor or Plain Country Liquor</td>
+                                      <td>19 to 43</td>
+                                      <td>43</td>
+                                      <td>0.3393861</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Blended Country Liquors</td>
+                                      <td>19 to 43</td>
+                                      <td>43</td>
+                                      <td>0.3393861</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Fenny - Cashew</td>
+                                      <td>19 to 43</td>
+                                      <td>43</td>
+                                      <td>0.3393861</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Fenny - Coconut</td>
+                                      <td>19 to 43</td>
+                                      <td>43</td>
+                                      <td>0.3393861</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Gin</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Liqueur or Cordial or Apertif</td>
+                                      <td>15 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Rum</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>White Rum</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Vodka</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Whisky</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Malt or Grain Whisky or Single Malt</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Blended Whisky</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Pot Distilled Spirits</td>
+                                      <td>36 to 50</td>
+                                      <td>50</td>
+                                      <td>0.394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Table Wine - White</td>
+                                      <td>7.0 to 15.5</td>
+                                      <td>15.5</td>
+                                      <td>0.12233685</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Table Wine - Red</td>
+                                      <td>7.0 to 15.5</td>
+                                      <td>15.5</td>
+                                      <td>0.12233685</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Wine with Carbon Dioxide</td>
+                                      <td>7.0 to 15.5</td>
+                                      <td>15.5</td>
+                                      <td>0.12233685</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Fortified Wine</td>
+                                      <td>15.0 to 24.0</td>
+                                      <td>24</td>
+                                      <td>0.1894248</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Fruit Wine (other than Grape Wine)</td>
+                                      <td>7.0 to 15.5</td>
+                                      <td>15.5</td>
+                                      <td>0.12233685</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Cider</td>
+                                      <td>0.5 to 9.0</td>
+                                      <td>9</td>
+                                      <td>0.0710343</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Perry</td>
+                                      <td>0.5 to 9.0</td>
+                                      <td>9</td>
+                                      <td>0.0710343</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Wine from Other Agricultural and Plant Sources</td>
+                                      <td>1.5 to 8.0</td>
+                                      <td>8</td>
+                                      <td>0.0631416</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Beer - Regular</td>
+                                      <td>0.5 up to 5.0</td>
+                                      <td>5</td>
+                                      <td>0.0394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Beer - Strong</td>
+                                      <td>5.0 up to 8.0</td>
+                                      <td>8</td>
+                                      <td>0.0631416</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Draught Beer - Regular</td>
+                                      <td>0.5 up to 5.0</td>
+                                      <td>5</td>
+                                      <td>0.0394635</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Draught Beer - Strong</td>
+                                      <td>5.0 up to 8.0</td>
+                                      <td>8</td>
+                                      <td>0.0631416</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Craft Beer - Regular</td>
+                                      <td>Up to 5.0</td>
+                                      <td>5</td>
+                                      <td>0.0394635</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                        </div>
+                        <select id="daily_consumption" name="daily_consumption" onchange="toggleQuarterlyDetails()">
+                            <option value="" disabled selected>Select daily drinking status</option>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+
+                        <!-- Question 3: Frequency in the last quarter -->
+                        <div id="quarterlyDetails" class="hidden">
+                            <label for="quarterly_frequency">In the last quarter, have you drunk more than once a
+                                month?</label>
+                            <select id="quarterly_frequency" name="quarterly_frequency">
+                                <option value="" disabled selected>Select frequency</option>
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Display Risk -->
+                    <div>
+                        <p id="displayol">Risk: 00</p>
+                    </div>
+                    <button type="button" onclick="updateol(calculateAlcoholCategory())">Check</button>
+                </fieldset>
+
+
+
+
+
+
+
+
+                <!--tobacoo-->
+                <fieldset id="tobaccoFieldset">
+                    <legend>Tobacco Consumption Assessment</legend>
+                  
+                    <!-- Question 1 -->
+                    <label for="tobaccoConsumed">Have you ever consumed tobacco?</label>
+                    <select id="tobaccoConsumed" name="tobaccoConsumed" onchange="toggleTobaccoQuestions()">
+                      <option value="" disabled selected>Select an option</option>
+                      <option value="no">No</option>
+                      <option value="yes">Yes</option>
+                    </select>
+                  
+                    <!-- Questions for 'Yes' in Question 1 -->
+                    <div id="tobaccoDetails" class="hidden">
+                      <!-- Question 2 -->
+                      <label for="tobaccoType">Which type of tobacco have you consumed?</label>
+                      <select id="tobaccoType" name="tobaccoType" onchange="toggleTobaccoAmountQuestion()">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="smoke">Smoked</option>
+                        <option value="smokeless">Smokeless</option>
+                        <option value="both">Both</option>
+                      </select>
+                  
+                      <!-- Question 3 -->
+                      <div id="tobaccoAmountDetails" class="hidden">
+                        <label for="tobaccoAmount">Have you consumed more than 70g of tobacco?</label>
+                        <select id="tobaccoAmount" name="tobaccoAmount" onchange="toggleFurtherQuestions()">
+                          <option value="" disabled selected>Select an option</option>
+                          <option value="no">No</option>
+                          <option value="yes">Yes</option>
+                        </select>
+                      </div>
+                  
+                      <!-- Question 4 (if No in Question 3) -->
+                      <div id="recentTobaccoDetails" class="hidden">
+                        <label for="recentTobacco">Have you consumed tobacco in the last 6 months?</label>
+                        <select id="recentTobacco" name="recentTobacco" onchange="calculateTobaccoRisk()">
+                          <option value="" disabled selected>Select an option</option>
+                          <option value="no">No</option>
+                          <option value="yes">Yes</option>
+                        </select>
+                      </div>
+                  
+                      <!-- Question 4a (if Yes in Question 3 and Smoked in Question 2) -->
+                      <div id="smokelessDetails" class="hidden">
+                        <label for="smokelessTobacco">Have you consumed smokeless tobacco in the last 1 year?</label>
+                        <select id="smokelessTobacco" name="smokelessTobacco" onchange="calculateTobaccoRisk()">
+                          <option value="" disabled selected>Select an option</option>
+                          <option value="no">No</option>
+                          <option value="yes">Yes</option>
+                        </select>
+                      </div>
+                  
+                      <!-- Question 4b (if Yes in Question 3 and Smokeless in Question 2) -->
+                      <div id="smokedDetails" class="hidden">
+                        <label for="smokedTobacco">Have you consumed smoked tobacco in the last 5 years?</label>
+                        <select id="smokedTobacco" name="smokedTobacco" onchange="calculateTobaccoRisk()">
+                          <option value="" disabled selected>Select an option</option>
+                          <option value="no">No</option>
+                          <option value="yes">Yes</option>
+                        </select>
+                      </div>
+                    </div>
+                  
+                    <!-- Risk Display -->
+                    <div>
+                      <p id="displayTobaccoRisk">Risk: 00</p>
+                    </div>
+                  </fieldset>
+
+
+
+
+
+
+
+
+
+
+
+                <!-- caffine-->
+                <fieldset>
+
+
+                    <!--CAFFEINE-->
+                    <legend>Caffeine</legend>
+                    <label for="caffeine">What is your usual caffeine intake in a day?</label>
+                    <select id="caffeine" name="caffeine">
+                        <option value="" disabled selected>Select caffeine intake</option>
+                        <option value="low">Less than 145 mg/day</option>
+                        <option value="medium">145 - 300 mg/day</option>
+                        <option value="high">More than 300 mg/day</option>
+                    </select>
+
+                    <div>
+                        <p id="displaycaff">Risk: 00</p>
+                    </div>
+                    <button type="button" onclick="updatecaff(calculateCaffeineCategory())">Check</button>
+
+                </fieldset>
+
+                <!-- Section 5: Sleep -->
+                <fieldset>
+                    <legend>Sleep</legend>
+                    <label for="sleep">What is your usual sleep duration?</label>
+                    <select id="sleep" name="sleep" required onchange="calculateSleepCategory();">
+                        <option value="" disabled selected>Select sleep duration</option>
+                        <option value="recommended">Recommended</option>
+                        <option value="maybeAppropriate">May be appropriate</option>
+                        <option value="notRecommended">Not recommended</option>
+
+                    </select>
+                    <div>
+                        <p id="displaysleep">Risk: 00</p>
+                    </div>
+                    <button type="button" onclick="updatesleep()">Check</button>
+
+                </fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- section: fluid-->
+                <fieldset>
+                    <legend>Fluids and Exercise</legend>
+
+                    <label for="fluidIntake">How many liters of fluid do you consume daily (in L)?</label>
+                    <input type="number" id="fluidIntake" step="0.1" required>
+
+                    <label for="activityStatus">What is your daily activity level?</label>
+                    <select id="activityStatus" required>
+                        <option value="">Select...</option>
+                        <option value="sedentary">Sedentary (little or no exercise)</option>
+                        <option value="lightly_active">Lightly active (1-3 days/week)</option>
+                        <option value="moderately_active">Moderately active (6-7 days/week)</option>
+                        <option value="very_active">Very active (exercise every day)</option>
+                        <option value="extra_active">Extra active (intense daily exercise)</option>
+                    </select>
+                    <div>
+                        <p id="displayfluid">Risk: 00</p>
+                    </div>
+                    <button type="button" onclick="updatefluid()">Check</button>
+                </fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- Section 6: Air Quality & Health Infrastructure -->
+                <fieldset>
+                    <legend>Air Quality </legend>
+                    <h3>Air Quality</h3>
+                    <label for="air_quality">How would you rate the air quality where you live?</label>
+                    <select id="air_quality" name="air_quality">
+                        <option value="" disabled selected>Select air quality rating</option>
+                        <option value="good">Good and Satisfactory</option>
+                        <option value="moderate">Moderately Polluted</option>
+                        <option value="poor">Poor and Severe AQI</option>
+                    </select>
+                    <div>
+                        <p id="displayair">Risk: 00</p>
+                    </div>
+                    <button type="button" onclick="updateair()">Check</button>
+
+                </fieldset>
+
+
+
+
+
+
+
+
+                <!--hospital-->
+                <fieldset>
+                    <legend>Accessibility to Health Infrastructure</legend>
+                    <label for="hospital_access_home">How long does it take to reach the hospital from the place of
+                        incidence?</label>
+                    <select id="hospital_access_home" name="hospital_access_home">
+                        <option value="" disabled selected>Select hospital access time from home</option>
+                        <option value="less_than_30">Less than 30 minutes</option>
+                        <option value="30-60">30-60 minutes</option>
+                        <option value="more_than_60">More than 60 minutes</option>
+                    </select>
+                    <div>
+                        <p id="displayhospitaldis">Risk: 00</p>
+                    </div>
+                    <button type="button" onclick="updatehdis()">Check</button>
+
+                </fieldset>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="form2.js"> </script>
+
+
+
+
+</body>
+
+</html>
