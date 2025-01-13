@@ -349,7 +349,7 @@ function calculateTobaccoRisk() {
     const smokelessTobacco = document.getElementById('smokelessTobacco').value;
     const smokedTobacco = document.getElementById('smokedTobacco').value;
     const displayRisk = document.getElementById('displayTobaccoRisk');
-
+ 
     let risk = 0;
 
     if (tobaccoConsumed === 'no') {

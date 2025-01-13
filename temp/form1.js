@@ -7,8 +7,8 @@ function handleAgeInput(agevalue) {
  */}
 function handleGenderInput(gendervalue) {
     localStorage.setItem('gender', gendervalue); // Store age in localStorage
-/*     toggleEducationFields();
- */}
+/*      toggleEducationFields();
+ */} 
 function handleWeightInput(weightvalue) {
     localStorage.setItem('weight', weightvalue); // Store age in localStorage
 /*     toggleEducationFields();

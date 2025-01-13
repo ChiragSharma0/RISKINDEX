@@ -16,7 +16,7 @@ async function fetchHeatStress() {
         if (response.ok) {
             const T = parseFloat(data.value); // UTCI temperature
             let K;
-
+ 
             // Determine normalized range based on UTCI value
             if (T >= 9 && T <= 26) {
                 K = 0 + ((T - 9) / (26 - 9)) * (0.25 - 0); // No thermal Stress

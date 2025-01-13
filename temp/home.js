@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+    
     // Event listener for the Calculate button
     document.getElementById('calculateButton').addEventListener('click', () => {
         if (VI && EI && HI) {

@@ -16,7 +16,7 @@ function toggleWorkplaceDetails() {
     const indoorDetails = document.getElementById('indoorDetails');
 
     if (workplaceSelect.value === 'indoor') {
-        indoorDetails.classList.remove('hidden');
+         indoorDetails.classList.remove('hidden');
     } else {
         indoorDetails.classList.add('hidden');
     }
