@@ -426,74 +426,77 @@
 
                 <!--tobacoo-->
                 <fieldset id="tobaccoFieldset">
-                    <legend>Tobacco Consumption Assessment</legend>
-                  
-                    <!-- Question 1 -->
-                    <label for="tobaccoConsumed">Have you ever consumed tobacco?</label>
-                    <select id="tobaccoConsumed" name="tobaccoConsumed" onchange="toggleTobaccoQuestions()">
+                  <legend>Tobacco Consumption Assessment</legend>
+              
+                  <!-- Question 1 -->
+                  <label for="tobaccoConsumed">Have you ever consumed tobacco?</label>
+                  <select id="tobaccoConsumed" name="tobaccoConsumed" onchange="toggleTobaccoQuestions()">
                       <option value="" disabled selected>Select an option</option>
                       <option value="no">No</option>
                       <option value="yes">Yes</option>
-                    </select>
-                  
-                    <!-- Questions for 'Yes' in Question 1 -->
-                    <div id="tobaccoDetails" class="hidden">
+                  </select>
+              
+                  <!-- Questions for 'Yes' in Question 1 -->
+                  <div id="tobaccoDetails" class="hidden">
                       <!-- Question 2 -->
                       <label for="tobaccoType">Which type of tobacco have you consumed?</label>
                       <select id="tobaccoType" name="tobaccoType" onchange="toggleTobaccoAmountQuestion()">
-                        <option value="" disabled selected>Select an option</option>
-                        <option value="smoke">Smoked</option>
-                        <option value="smokeless">Smokeless</option>
-                        <option value="both">Both</option>
+                          <option value="" disabled selected>Select an option</option>
+                          <option value="smoke">Smoked</option>
+                          <option value="smokeless">Smokeless</option>
+                          <option value="both">Both</option>
                       </select>
-                  
+              
                       <!-- Question 3 -->
                       <div id="tobaccoAmountDetails" class="hidden">
-                        <label for="tobaccoAmount">Have you consumed more than 70g of tobacco?</label>
-                        <select id="tobaccoAmount" name="tobaccoAmount" onchange="toggleFurtherQuestions()">
-                          <option value="" disabled selected>Select an option</option>
-                          <option value="no">No</option>
-                          <option value="yes">Yes</option>
-                        </select>
+                          <label for="tobaccoAmount">Have you consumed more than 70g (or 100 cigarettes) of tobacco?</label>
+                          <select id="tobaccoAmount" name="tobaccoAmount" onchange="toggleFurtherQuestions()">
+                              <option value="" disabled selected>Select an option</option>
+                              <option value="no">No</option>
+                              <option value="yes">Yes</option>
+                          </select>
                       </div>
-                      
-                  
-                      <!-- Question 4 (if No in Question 3) -->
+              
+                      <!-- Question 4 -->
                       <div id="recentTobaccoDetails" class="hidden">
-                        <label for="recentTobacco">Have you consumed tobacco in the last 6 months?</label>
-                        <select id="recentTobacco" name="recentTobacco" onchange="calculateTobaccoRisk()">
-                          <option value="" disabled selected>Select an option</option>
-                          <option value="no">No</option>
-                          <option value="yes">Yes</option>
-                        </select>
+                          <label for="recentTobacco">Have you consumed tobacco in the last 6 months?</label>
+                          <select id="recentTobacco" name="recentTobacco">
+                              <option value="" disabled selected>Select an option</option>
+                              <option value="no">No</option>
+                              <option value="yes">Yes</option>
+                          </select>
                       </div>
-                  
-                      <!-- Question 4a (if Yes in Question 3 and Smoked in Question 2) -->
+              
+                      <!-- Question 4a -->
                       <div id="smokelessDetails" class="hidden">
-                        <label for="smokelessTobacco">Have you consumed smokeless tobacco in the last 1 year?</label>
-                        <select id="smokelessTobacco" name="smokelessTobacco" onchange="calculateTobaccoRisk()">
-                          <option value="" disabled selected>Select an option</option>
-                          <option value="no">No</option>
-                          <option value="yes">Yes</option>
-                        </select>
+                          <label for="smokelessTobacco">Have you consumed smokeless tobacco in the last 1 year?</label>
+                          <select id="smokelessTobacco" name="smokelessTobacco">
+                              <option value="" disabled selected>Select an option</option>
+                              <option value="no">No</option>
+                              <option value="yes">Yes</option>
+                          </select>
                       </div>
-                  
-                      <!-- Question 4b (if Yes in Question 3 and Smokeless in Question 2) -->
+              
+                      <!-- Question 4b -->
                       <div id="smokedDetails" class="hidden">
-                        <label for="smokedTobacco">Have you consumed smoked tobacco in the last 5 years?</label>
-                        <select id="smokedTobacco" name="smokedTobacco" onchange="calculateTobaccoRisk()">
-                          <option value="" disabled selected>Select an option</option>
-                          <option value="no">No</option>
-                          <option value="yes">Yes</option>
-                        </select>
+                          <label for="smokedTobacco">Have you consumed smoked tobacco in the last 5 years?</label>
+                          <select id="smokedTobacco" name="smokedTobacco">
+                              <option value="" disabled selected>Select an option</option>
+                              <option value="no">No</option>
+                              <option value="yes">Yes</option>
+                          </select>
                       </div>
-                    </div>
-                  
-                    <!-- Risk Display -->
-                    <div>
-                      <p id="displayTobaccoRisk">Risk: 00</p>
-                    </div>
-                  </fieldset>
+                  </div>
+              
+                  <!-- Risk Display -->
+                  <div>
+                      <p id="displayTobaccoRisk">Risk: 0.00</p>
+                  </div>
+              
+                  <!-- Button to Update Risk -->
+                  <button type="button" onclick="updateTobaccoRisk()">Update Risk</button>
+              </fieldset>
+              
 
 
 
