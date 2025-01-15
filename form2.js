@@ -282,13 +282,7 @@ function updateol(olValue) {
 
 
 
-
-
-
-
-
-
-
+ 
 
 
 
@@ -302,41 +296,36 @@ function toggleTobaccoQuestions() {
     if (tobaccoConsumed === 'no') {
         displayRisk.innerText = 'Risk: 0.33';
         tobaccoDetails.classList.add('hidden');
-    } else{
-        if(userAge <= 25  || isPregnant){
+    } else {
+        if (userAge < 25 || isPregnant) {
             displayRisk.innerText = 'Risk: 1.00';
             tobaccoDetails.classList.add('hidden');
-
+        } else {
+            tobaccoDetails.classList.remove('hidden');
         }
-        else tobaccoDetails.classList.remove('hidden');
     }
 }
 
 function toggleTobaccoAmountQuestion() {
-    const tobaccoType = document.getElementById('tobaccoType').value;
-    const tobaccoAmountDetails = document.getElementById('tobaccoAmountDetails');
-    tobaccoAmountDetails.classList.remove('hidden');
+    document.getElementById('tobaccoAmountDetails').classList.remove('hidden');
 }
 
 function toggleFurtherQuestions() {
     const tobaccoAmount = document.getElementById('tobaccoAmount').value;
-    const recentTobaccoDetails = document.getElementById('recentTobaccoDetails');
-    const smokelessDetails = document.getElementById('smokelessDetails');
-    const smokedDetails = document.getElementById('smokedDetails');
     const tobaccoType = document.getElementById('tobaccoType').value;
 
-    recentTobaccoDetails.classList.add('hidden');
-    smokelessDetails.classList.add('hidden');
-    smokedDetails.classList.add('hidden');
+    document.getElementById('recentTobaccoDetails').classList.add('hidden');
+    document.getElementById('smokelessDetails').classList.add('hidden');
+    document.getElementById('smokedDetails').classList.add('hidden');
 
     if (tobaccoAmount === 'no') {
-        recentTobaccoDetails.classList.remove('hidden');
+        document.getElementById('recentTobaccoDetails').classList.remove('hidden');
     } else if (tobaccoAmount === 'yes') {
         if (tobaccoType === 'smoke' || tobaccoType === 'both') {
-            smokelessDetails.classList.remove('hidden');
+            document.getElementById('smokedDetails').classList.remove('hidden');
         }
         if (tobaccoType === 'smokeless' || tobaccoType === 'both') {
-            smokedDetails.classList.remove('hidden');
+            document.getElementById('smokelessDetails').classList.remove('hidden');
         }
     }
 }
@@ -348,31 +337,42 @@ function calculateTobaccoRisk() {
     const recentTobacco = document.getElementById('recentTobacco').value;
     const smokelessTobacco = document.getElementById('smokelessTobacco').value;
     const smokedTobacco = document.getElementById('smokedTobacco').value;
-    const displayRisk = document.getElementById('displayTobaccoRisk');
- 
+    const userAge = parseInt(localStorage.getItem('age'), 10);
+    const isPregnant = localStorage.getItem('ispregnant') === 'true';
+
     let risk = 0;
 
     if (tobaccoConsumed === 'no') {
         risk = 0.33;
-    } else if(userAge <= 25  || isPregnant){
-        
+    } else if (userAge < 25 || isPregnant) {
         risk = 1.00;
-    }else if (tobaccoAmount === 'no') {
+    } else if (tobaccoAmount === 'no') {
         risk = recentTobacco === 'yes' ? 0.66 : 0.33;
     } else if (tobaccoAmount === 'yes') {
         if (tobaccoType === 'smoke' || tobaccoType === 'both') {
-            risk = smokelessTobacco === 'yes' ? 1.00 : 0.33;
+            risk = smokedTobacco === 'yes' ? 1.00 : 0.66;
         }
         if (tobaccoType === 'smokeless' || tobaccoType === 'both') {
-            risk = smokedTobacco === 'yes' ? 1.00 : 0.66;
+            risk = smokelessTobacco === 'yes' ? 1.00 : 0.33;
+        }
+        if (tobaccoType === 'both') {
+            if (smokedTobacco === 'yes' && smokelessTobacco === 'yes') {
+                risk = 1.00;
+            } else if (smokedTobacco === 'no' && smokelessTobacco === 'no') {
+                risk = 0.33;
+            } else {
+                risk = 0.66;
+            }
         }
     }
 
-    displayRisk.innerText = `Risk: ${risk.toFixed(2)}`;
-    return risk;
+    return risk.toFixed(2);
 }
 
-
+function updateTobaccoRisk() {
+    const risk = calculateTobaccoRisk();
+    document.getElementById('displayTobaccoRisk').innerText = `Risk: ${risk}`;
+}
 
 
 
