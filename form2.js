@@ -329,7 +329,7 @@ function toggleFurtherQuestions() {
         }
     }
 }
-
+ 
 function calculateTobaccoRisk() {
     const tobaccoConsumed = document.getElementById('tobaccoConsumed').value;
     const tobaccoType = document.getElementById('tobaccoType').value;
@@ -356,13 +356,12 @@ function calculateTobaccoRisk() {
             risk = smokelessTobacco === 'yes' ? 1.00 : 0.33;
         }
         if (tobaccoType === 'both') {
-            if (smokedTobacco === 'yes' && smokelessTobacco === 'yes') {
+            if (smokedTobacco === 'yes' || smokelessTobacco === 'yes') {
                 risk = 1.00;
             } else if (smokedTobacco === 'no' && smokelessTobacco === 'no') {
                 risk = 0.33;
-            } else {
-                risk = 0.66;
-            }
+            } 
+            
         }
     }
 
