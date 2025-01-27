@@ -35,6 +35,7 @@ header{
 }
 
 footer{
+display:flex;
     position: fixed;
     bottom: 0px;
     height: 30px;
