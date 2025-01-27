@@ -440,7 +440,7 @@
                   <div id="tobaccoDetails" class="hidden">
                       <!-- Question 2 -->
                       <label for="tobaccoType">Which type of tobacco have you consumed?</label>
-                      <select id="tobaccoType" name="tobaccoType" onchange="toggleTobaccoAmountQuestion()">
+                      <select id="tobaccoType" name="tobaccoType" onchange="toggleTobaccoAmountQuestion(),toggleFurtherQuestions()">
                           <option value="" disabled selected>Select an option</option>
                           <option value="smoke">Smoked</option>
                           <option value="smokeless">Smokeless</option>
@@ -676,12 +676,11 @@
         </div>
     </div>
 
-
-
     <footer>
       <a href="index.html"><button>First page</button></a>
       <a href="second.html"><button>second page</button></a>
   </footer>
+
 
     <script src="form2.js"> </script>
 
