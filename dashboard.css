@@ -1,0 +1,329 @@
+.burger {
+    position: relative;
+    width: 40px;
+    height: 30px;
+    background: transparent;
+    cursor: pointer;
+    display: block;
+  }
+  
+  .burger input {
+    display: none;
+  }
+  
+  .burger span {
+    display: block;
+    position: absolute;
+    height: 4px;
+    width: 100%;
+    background: black;
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: .25s ease-in-out;
+  }
+  
+  .burger span:nth-of-type(1) {
+    top: 0px;
+    transform-origin: left center;
+  }
+  
+  .burger span:nth-of-type(2) {
+    top: 50%;
+    transform: translateY(-50%);
+    transform-origin: left center;
+  }
+  
+  .burger span:nth-of-type(3) {
+    top: 100%;
+    transform-origin: left center;
+    transform: translateY(-100%);
+  }
+  
+  .burger input:checked ~ span:nth-of-type(1) {
+    transform: rotate(45deg);
+    top: 0px;
+    left: 5px;
+  }
+  
+  .burger input:checked ~ span:nth-of-type(2) {
+    width: 0%;
+    opacity: 0;
+  }
+  
+  .burger input:checked ~ span:nth-of-type(3) {
+    transform: rotate(-45deg);
+    top: 28px;
+    left: 5px;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* DateLoc.module.css */
+
+/* Using clamp() for responsive font size */
+.datetime h3 {
+  font-size: clamp(10px, 2vw, 30px); /* Minimum size: 20px, preferred size: 5vw, maximum size: 40px */
+}
+
+.lonlat {
+  font-size: clamp(8px, 2vw, 15px); /* Minimum size: 14px, preferred size: 3vw, maximum size: 19px */
+}
+
+.infobox {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.date-time,
+.location {
+  position: relative;
+  width: 50%;
+  background: #fff;
+  padding: 13px 17px;
+  border-radius: 20px;
+  border: 1px solid black;
+  box-shadow: 2px 4px 7px rgba(0, 0, 0, 0.5);
+  flex: 1 1;
+  margin: 5px;
+  min-width: max-content;
+}
+
+
+
+.date {
+  font-size: 70%;
+}
+
+.zone {
+  font-size: 30%;
+}
+
+.location h4 {
+  font-size: clamp(10px, 2vw, 25px); /* Minimum size: 20px, preferred size: 3vw, maximum size: 30px */
+}
+
+
+
+/* Button styling */
+.edit-button {
+    position:absolute ;
+    top: 10px;
+    right: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: none; /* Initially hidden */
+}
+
+/* Show button when hovering over the parent div */
+.date-time:hover .edit-button {
+    display: block;
+}
+
+
+.location-details:hover .edit-button {
+  display: block;
+}
+.close{
+  font-size: 30px;
+}
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.modal select {
+    margin: 10px 0;
+    padding: 5px;
+    width: 100%;
+}
+
+.modal button {
+    padding: 5px 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Sidebar (Hidden Initially) */
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background: #2c3e50;
+  color: white;
+  position: fixed;
+  right: -300px; /* Initially Hidden */
+  top: 0;
+  padding: 20px;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.2);
+  transition: right 0.4s ease-in-out;
+  z-index: 3050; /* Ensure it appears on top */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar Visible */
+.sidebar.active {
+  right: 0;
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+
+.close-btn:hover {
+  background: white;
+  color: #2c3e50;
+}
+
+/* Sidebar Content */
+.sidebar h2 {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Sidebar Menu */
+.sidebar ul {
+  list-style: none;
+  padding: 20px 0;
+}
+
+.sidebar ul li {
+  padding: 12px 20px;
+  transition: 0.3s ease;
+}
+
+.sidebar ul li:hover {
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+/* Sidebar Links */
+.sidebar ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  display: block;
+  transition: 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+  padding-left: 10px;
+}

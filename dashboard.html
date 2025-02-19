@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTCI HSRIF</title>
+
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Leaflet.js for Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+
+</head>
+
+<body>
+
+    <div id='body'>
+        <div class="dashboard">
+
+            <header>
+                <div>
+                    <h2>UTCI HSRIF </h2>
+                    <p class='para1'>UTCI based Heat Stress Risk Index_Forecast</p>
+                </div>
+                <div>
+                    <label class="burger" style="z-index: 2000;" for="burger" onclick="openSidebar();">
+                        <input type="checkbox" id="burger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </label>
+                </div>
+            </header>
+            <main>
+                <div class="img-container">
+                    <div id='imgbox'>
+                        <img id="img" src="./MAPIMAGES//UTCI_10_12.png" alt="">
+                    </div>
+                </div>
+                <div id='info-container'>
+                    <div class="info-box">
+                        <div class="date-time">
+                            <p>Date & Time</p>
+                            <h3 id="dateTime">Loading...</h3>
+                            <button class="edit-button" onclick="openModal()">Edit</button>
+                        </div>
+                        <div class="location">
+                            <p>Location & Place</p>
+                            <div class="location-details">
+                                <h3 class="lonlat">
+                                    Lat: <span id="lat">Fetching...</span>
+                                    <br> Lon: <span id="lon">Fetching...</span>
+                                </h3>
+                                <h4 id="localityName">| Workplace</h4>
+                                <button class="edit-button" onclick="openLocationModal()">✎ Edit</button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="index-container">
+                        <div class="index-box">
+                            <h3>Vulnerability Index (V.I.)</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Vulnerability</th>
+                                        <th>L</th>
+                                        <th>M</th>
+                                        <th>H</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="vulnerability-table">
+                                    <!-- Rows will be inserted dynamically -->
+                                </tbody>
+                            </table>
+
+                            <div style="display:flex ; padding: 0px 15px; justify-content:space-between">
+                                <div class="underline1">High</div>
+                                <div class="underline2">Medium</div>
+                                <div class="underline3">Low</div>
+                            </div>
+                        </div>
+
+                        <div class="index-box">
+                            <h3>Exposure Index (E.I.)</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Exposure</th>
+                                        <th>L</th>
+                                        <th>M</th>
+                                        <th>H</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="exposure-table"></tbody>
+                            </table>
+
+                            <div style="display:flex ; padding: 0px 15px; justify-content:space-between">
+
+                                <div class="underline1">High</div>
+                                <div class="underline2">Medium</div>
+                                <div class="underline3">Low</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="index-values">
+                        <div class='indexvalues-indivisual'>
+                            <div class="index-card">H.I <span id="HI" class="highlight">0.00</span></div>
+                            <div class="index-card">V.I <span id="VI" class="highlight">0.78</span></div>
+                            <div class="index-card">E.I <span id="EI" class="highlight1">0.50</span></div>
+                        </div>
+                        <div class='indexvalue-final'>
+                            <div class="index-card-result">
+                                <p>Risk index</p><span class="highlight">0.34</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <p>&copy; 2024 My React App. All rights reserved.</p>
+            </footer>
+        </div>
+    </div>
+
+
+
+    <div class="sidebar" id="sidebar">
+        <div style="display: flex; justify-content: space-around; align-items: center;" >
+            <button class="close-btn" onclick="closeSidebar()">✖</button>
+            <h2>Menu</h2>
+        </div>
+        <ul>
+            <li><a href="index.html">VI form</a></li>
+            <li><a href="second.html">EI form</a></li>
+
+        </ul>
+    </div>
+
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <!-- Modal Box -->
+    <div class="modal" id="dateTimeModal">
+        <h3>Select Date & Time</h3>
+        <label>Date (10-16):</label>
+        <select id="dateSelect">
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+        </select>
+        <label>Hour (0-23):</label>
+        <select id="hourSelect">
+            <!-- JavaScript will populate this -->
+        </select>
+        <button onclick="saveDateTime()">Save</button>
+        <button onclick="closeModal()">Cancel</button>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Location Selection Modal -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLocationModal()">&times;</span>
+            <h3>Select Location</h3>
+            <div id="map" style="height: 300px;"></div>
+            <p id="selectedLocation">📍 No location selected</p>
+            <button onclick="saveLocation()">Save Location</button>
+        </div>
+    </div>
+
+    <script src="./dash.js"></script>
+</body>
+
+</html>
