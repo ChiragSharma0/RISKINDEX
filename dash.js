@@ -639,7 +639,7 @@ function updateChart(labels, data) {
 async function fetchDataAndProcess() {
     try {
         console.log("Fetching JSON data...");
-        const response = await fetch("./Final Output_UTCI.json");
+        const response = await fetch("./data.json");
         const jsonData = await response.json();
         console.log("Data fetched successfully!");
         processData(jsonData);
